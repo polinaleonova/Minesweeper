@@ -1,51 +1,134 @@
 body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+.wrapper{
+    width: 100%;
+    height: 100%;
     display:flex;
     flex-direction: row;
     justify-content: center;
+    background-color: #1D1D1D;
 }
-.main{
-    width: 40vw;
+.content{
+    background-color: darkslategray;
+    width: 50vw;
+    height: 55vw;
     display:flex;
     flex-direction: column;
-    align-items: center;
+    flex-wrap: nowrap;
+    align-items: stretch;
 }
-.block-hidden{
-    visibility: hidden;
+.head {
+    background-color: #303030;
+    height: 5vw;
+}
+.head__btns-block{
+    width: 45%;
+    height: inherit;
+    float: left;
+    box-sizing: border-box;
+    border: solid 2px black;
+
+}
+.head__text{
+    display: table-cell;
+    text-align: center;
+    font-size: 28px;
+    width: inherit;
+}
+.head__btns-wrapper{
+    height: 80%;
+    background-color: #1D1D1D;
+    border-top: solid 2px black;
+}
+button{
+    border: none;
+    font-size: 2vw;
+    width: calc(50% - 2px);
+    height: inherit;
+    color: tan;
+    box-sizing: border-box;
+    background-color: #1D1D1D;
+}
+.head__img-container{
+    float: left;
+    background-image : url("imgs/smile.jpg");
+    background-size: cover;
+    width: 10%;
+    height: inherit;
+    box-sizing: border-box;
+    border: solid 2px black;
+}
+
+.head__img-container.loose-game{
+    background-image : url("imgs/bones.png");
+}
+.head__img-container.win-game{
+    background-image : url("imgs/sm.jpg");
+}
+.head__info{
+    display:table-cell;
+    height: inherit;
+    width: 22.5%;
+    box-sizing: border-box;
+    border: solid 2px black;
+    float: left;
+    padding: 10px;
+}
+.info-block{
+    text-align: center;
+    color: tan;
+    font-size: 3vw;
+}
+.main-container{
+    height: 50vw;
+    background-color: #AB0202;
+}
+.mined{
+    background-image : url("imgs/bomba.png");
+    background-size: cover;
+}
+.flag{
+    background-image : url("imgs/flag.png");
+    background-size: cover;
+}
+.opened{
+    color: #9C8E7C;
+    font-size: 2vw;
+    line-height: 0;
 }
 table{
     width: 100%;
+    height: 100%;
     margin: auto;
-}
-
-tr{
-    /*width: 640px;*/
+    table-layout: fixed;
 }
 td{
-    display: table-cell;
-    width: 12.5vw ;
-    height: 12.5vh;
-    background-color: #f0c97a;
+    text-align: center;
+    vertical-align: middle;
+    color: tan;
+    background-color: #000000;
 }
-p{
-    color: darkorange;
+.dialog {
+    background-color: black;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    top:0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
 }
-.red{
-    background-color: red;
+.dialog__content{
+    position: absolute;
+    top:20%;
+    left: 30%;
+    width: 40%;
+    height: 55%;
+    background-image: url("imgs/cong.jpg");
+    background-size: cover;
 }
-[flag]{
-    background-color: forestgreen;
-}
-.container__game_data{
-    display:flex;
-
-    height: 50px;
-    /*width: 100vw;*/
-}
-.game_data{
-    height: 50px;
-    width: 200px;
-}
-.container_field{
-    display:flex;
-
+.hidden{
+    display: none;
 }
