@@ -26,10 +26,14 @@ var mediator = {
         this.createRandomMinedField(currentFieldSize, generalFlagsCount);
     },
     createRandomMinedField: function(currentFieldSize, generalFlagsCount) {
-        var dialog_content, field;
+        var resultImg, field;
         this.field && this.field.destroy();
-        dialog_content = document.getElementById('result_message');
-        dialog_content.innerHTML = "";
+        resultImg = document.getElementById('result');
+        if (resultImg.classList.contains('loose-game')) {
+            resultImg.classList.remove('loose-game')
+        } else if (resultImg.classList.contains('win-game')) {
+            resultImg.classList.remove('win-game')
+        }
         field = new Field(this, currentFieldSize, generalFlagsCount);
         field.createField();
         this.field = field;
@@ -38,20 +42,26 @@ var mediator = {
         this.parameters.createInterval(this.parameters.timeCount);
     },
     stopGame: function(result) {
-        var fieldTable, dialog_content, message;
+        var fieldTable, resultImg;
         fieldTable = document.getElementById('mines_field').firstElementChild;
-        dialog_content = document.getElementById('result_message');
+        resultImg = document.getElementById('result');
         this.parameters.stopTimer();
         fieldTable.style.pointerEvents = "none";
-        if (result === 'loose') {
-            message = "You loose!Try Again!";
+
+        if (result === 'fail' || result === 'full_loser') {
+            resultImg.classList.add('loose-game');
+            if (result === 'full_loser') {
+                document.getElementById('message').classList.toggle('hidden')
+            }
         } else {
-            message = "You win!Try Again!";
+            resultImg.classList.add('win-game');
         }
-        dialog_content.innerHTML = message;
     }
 };
+
 var level;
+var level_default = 'easy';
+
 var Field = function(mediator, currentFieldSize, generalFlagsCount) {
     this.currentFieldSize = currentFieldSize;
     this.generalFlagsCount = generalFlagsCount;
@@ -64,19 +74,22 @@ Field.prototype = {
     createField: function() {
         var fieldTableContent, minedCellsObj, fieldContainer, cellsFieldList;
         var self = this;
+        
         cellsFieldList = getCellsFieldList(this.currentFieldSize);
         self.cellsNumber = Math.pow(this.currentFieldSize, 2);
         minedCellsObj = randomMinesScattering(cellsFieldList, self.cellsNumber, this.generalFlagsCount);
         self.fieldObj = runCounterOfMinedNeighborsForCell(minedCellsObj, cellsFieldList, this.currentFieldSize);
         fieldContainer = document.getElementById('mines_field');
         fieldTableContent = '<tbody>';
+        
         for (var row = 0; row<this.currentFieldSize; row++) {
             fieldTableContent+='<tr>';
             for (var column = 0; column < this.currentFieldSize; column++ ) {
-                fieldTableContent += '<td id='+ row+'_'+column+'>'+self.fieldObj[row+'_'+column]['mined']+'</td>'
+                fieldTableContent += '<td id='+ row+'_'+column+'></td>'; //self.fieldObj[row+'_'+column]['mined']
             }
             fieldTableContent+='</tr>'
         }
+        
         fieldTableContent+='</tbody>';
         self.fieldTable = document.createElement('table');
         self.fieldTable.innerHTML = fieldTableContent;
@@ -117,16 +130,21 @@ Field.prototype = {
     },
     openCellAndcheckNeighbors: function(cellId) {
         var cell, minedNeighborsNumber;
+        
         cell = document.getElementById(cellId);
         if (this.fieldObj[cellId]['mined']) {
             for (currentCell in this.fieldObj) {
                 if (!this.fieldObj.hasOwnProperty(currentCell)) continue;
                 if (this.fieldObj[currentCell]['mined']) {
-                    document.getElementById(currentCell).innerHTML = "*"
+                    document.getElementById(currentCell).classList.add('mined');
                 }
             }
-            this.mediator.stopGame('loose')
-        } else{
+            if (document.querySelectorAll('[opened]').length == 0){
+                this.mediator.stopGame('full_loser');
+                return
+            }
+            this.mediator.stopGame('fail')
+        } else {
             minedNeighborsNumber = this.fieldObj[cellId]['minedNeighbors'];
             cell.innerHTML = minedNeighborsNumber;
             cell.setAttribute('opened', '');
@@ -142,6 +160,7 @@ Field.prototype = {
         var coord = zeroCell.split("_");
         var x = coord[0];
         var y = coord[1];
+        
         for (var i = x - 1; i <= +x + 1; i++) {
             for (var j = y - 1; j <= +y + 1; j++) {
                 if (i >= 0 && i < this.currentFieldSize && j >= 0 && j < this.currentFieldSize && !( i == x && j == y)) {
@@ -180,7 +199,7 @@ var GameParameters = function(level, mediator) {
             prevVal = self.timeCount;
             self.timeCount = prevVal + 1;
             if ( self.timeCount === 999) {
-                self.mediator.stopGame('loose');
+                self.mediator.stopGame('fail');
             }
             time_element = document.getElementById('timer');
             time_element.innerHTML = self.convertTimeCount();
@@ -284,12 +303,20 @@ event.preventDefault();
   };
 
 window.onload = function() {
-    var settingBtns = document.getElementById('previous_setting');
+    var settingBtns = document.getElementById('set-level');
+    var closeDialog = document.getElementById('message');
+    closeDialog.addEventListener('click', function() {
+        this.classList.toggle('hidden');
+    });
     settingBtns.addEventListener('click', function(e) {
         level = e.target.value;
         prepeareToStart(level);
-        document.getElementById('container_field').classList.remove('block-hidden');
     });
+    //create field with default level
+    if (!level){
+        level = level_default;
+        prepeareToStart(level);
+    }
 };
 
 

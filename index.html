@@ -7,21 +7,34 @@
     <script src="main.js"></script>
 </head>
 <body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="head">
 
-    <div class="main">
-        <div id="previous_setting" class="container__game_set">
-            <p>New game</p>
-            <button class="bt__game_set" value="easy">Easy</button>
-            <button class="bt__game_set" value="hard">Hard</button>
+                <div class="head__btns-block" id="set-level">
+                    <p class="head__text">Start new game?</p>
+                    <div class="head__btns-wrapper">
+                        <button class="head__btn" value="easy">Easy</button>
+                        <button class="head__btn" value="hard">Hard</button>
+                    </div>
+                </div>
+
+                <div class="head__img-container" id="result"></div>
+
+                <div class="head__info" id="container_field">
+                    <div class="info-block" id="flags_count">0</div>
+                </div>
+
+                <div class="head__info" id="container_field">
+                    <div class="info-block" id="timer">0</div>
+                </div>
+
+            </div>
+            <div id="mines_field" class="main-container"></div>
         </div>
-        <div class="dialog_wind" id="result">
-            <p id="result_message" class="dialog_wind-text"></p>
-        </div>
-        <div class="container__game_data block-hidden" id="container_field">
-            <div class="game_data" id="flags_count">0</div>
-            <div class="game_data" id="timer">0</div>
-        </div>
-        <div id="mines_field" class="container_field"></div>
+    </div>
+    <div class="dialog hidden" id="message">
+        <div class="dialog__content"></div>
     </div>
 </body>
 </html>
