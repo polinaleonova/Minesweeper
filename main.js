@@ -305,11 +305,15 @@ event.preventDefault();
 window.onload = function() {
     var settingBtns = document.getElementById('set-level');
     var closeDialog = document.getElementById('message');
+    var result = document.getElementById('result');
     closeDialog.addEventListener('click', function() {
         this.classList.toggle('hidden');
     });
     settingBtns.addEventListener('click', function(e) {
         level = e.target.value;
+        prepeareToStart(level);
+    });
+    result.addEventListener('click', function(e) {
         prepeareToStart(level);
     });
     //create field with default level
